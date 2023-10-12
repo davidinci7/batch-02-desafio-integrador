@@ -16,40 +16,51 @@ var BURNER_ROLE = getRole("BURNER_ROLE");
 
 // Publicar NFT en Mumbai
 async function deployMumbai() {
-  var relAddMumbai; // relayer mumbai
-  var name = "Chose a name";
-  var symbol = "Chose a symbol";
-
   // utiliza deploySC
+  var proxyContract = await deploySC("CuyCollectionNft",[]);
+  var proxyAddress = await proxyContract.getAddress();
   // utiliza printAddress
+  var implAdd = await printAddress("CuyCollectionNft", proxyAddress);
   // utiliza ex
   // utiliza ex
   // utiliza verify
 
-  await verify(implAdd, "CUYNFT");
+  await verify(implAdd, "CuyCollectionNft", []);
 }
 
 // Publicar UDSC, Public Sale y Bbites Token en Goerli
 async function deployGoerli() {
-  var relAddGoerli; // relayer goerli
 
-  // var psC Contrato
-  // deploySC;
   // var bbitesToken Contrato
   // deploySC;
+  var bbitesContract = await deploySC("BBitesToken",[]);
+  var bbitesProxyAdd = await bbitesContract.getAddress();
+  var impBT = await printAddress("BBitesToken", bbitesProxyAdd);
+  await verify(impBT, "BBitesToken", []);
   // var usdc Contrato
   // deploySC;
+  var usdcContract = await deploySCNoUp("USDCoin",[]);
+  var usdcAdd = await usdcContract.getAddress();
+  await verify(usdcAdd, "USDCoin", []);
 
-  // var impPS = await printAddress("PublicSale", await psC.getAddress());
-  // var impBT = await printAddress("BBitesToken", await bbitesToken.getAddress());
-
-  // set up
-  // script para verificacion del contrato
 }
 
-deployMumbai()
-  // deployGoerli()
-  //
+async function deployPublicSale(){
+  var psContract = await deploySC("PublicSale",[]);
+  var psProxyAdd = await psContract.getAddress();
+  var impPS = await printAddress("PublicSale", psProxyAdd);
+  await verify(impPS, "PublicSale", []);
+}
+
+function roles(){
+  console.log(`El minter role en bytes32 es: ${MINTER_ROLE}`);
+  console.log(`El burner role en bytes32 es: ${BURNER_ROLE}`);
+}
+
+//deployMumbai()
+  //deployGoerli()
+  deployPublicSale()
+  //roles()
   .catch((error) => {
     console.error(error);
     process.exitCode = 1;
