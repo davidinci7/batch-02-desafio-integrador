@@ -17,15 +17,15 @@ contract BBitesToken is Initializable, ERC20Upgradeable, PausableUpgradeable, Ac
    
     function initialize() public initializer {
         __ERC20_init("BBites Token", "BBTKN");
+         __Pausable_init();
+        __AccessControl_init();
+        __Ownable_init();
+        __UUPSUpgradeable_init();
         _mint(msg.sender, 1000000 * 10 ** decimals());
         __ERC20Permit_init("BBites Token");
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        __Pausable_init();
-        __AccessControl_init();
-        __Ownable_init();
-        __UUPSUpgradeable_init();
     }
 
     function _authorizeUpgrade(

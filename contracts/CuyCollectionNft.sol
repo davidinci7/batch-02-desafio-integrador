@@ -51,7 +51,7 @@ function _authorizeUpgrade(
         uint256 tokenId
     ) public whenNotPaused onlyRole(MINTER_ROLE) {
         // solo puede ser llamado por el Relayer de Open Zeppelin en Mumbai. Los ids permitidos van del 0 al 999 para este método
-        require(tokenId >= 0 && 999 <= tokenId, "Estas tratando de mintear un NFT que es exclusivo para usuarios de la lista blanca");
+        require(tokenId >= 0 && 999 >= tokenId, "Estas tratando de mintear un NFT que es exclusivo para usuarios de la lista blanca");
         _safeMint(to, tokenId);
     }
 
@@ -62,7 +62,7 @@ function _authorizeUpgrade(
     ) public whenNotPaused{
         //Internamente este método valida que to y tokenId sean parte de la lista.
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(to, tokenId))));
-        require(tokenId >= 1000 && 1999 <= tokenId, "Estas tratando de mintear un NFT que no es parte de la lista blanca");
+        require(tokenId >= 1000 && 1999 >= tokenId, "Estas tratando de mintear un NFT que no es parte de la lista blanca");
         require(MerkleProof.verify(proofs, root, leaf), "No eres parte de la lista blanca");
         _safeMint(to, tokenId);
     }
@@ -70,7 +70,7 @@ function _authorizeUpgrade(
     function buyBack(uint256 id) public {
         /*permite a los dueños de los ids en el rango de 1000 y 1999 (inclusivo) quemar sus NFTs a cambio de un repago de BBTKN en la red de Ethereum (Goerli). 
         Este método emite el evento Burn(address account, uint256 id) que finalmente, cross-chain, dispara mint() en el token BBTKN en la cantidad de 10,000 BBTKNs. */
-        require(id >= 1000 && 1999 <= id);
+        require(id >= 1000 && 1999 >= id);
         _burn(id);
         emit Burn(msg.sender, id);
     }

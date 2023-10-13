@@ -24,7 +24,7 @@ exports.handler = async function (data) {
   var { account, id } = event[0].params;
 
   // Ejecutar 'mint' en Goerli del contrato BBitesToken
-  var bbitesTokenAdd = "0x4A16D22ae3A53E30ef0519F845511A990B0300B8";
+  var bbitesTokenAdd = "0xE8F4F1255d0434dF0a1653985691b1b6dE17756d";
   var tokenAbi = ["function mint(address to, uint256 amount)"];
   var tokenContract = new ethers.Contract(bbitesTokenAdd, tokenAbi, signer);
   var tokens = 10000 * 10 **18;

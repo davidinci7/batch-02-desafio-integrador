@@ -37,8 +37,8 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(UPGRADER_ROLE, msg.sender);
         router = IUniSwapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-        bbitesToken = IERC20Upgradeable(0xbb553A8f3049baE459A15d149b20c25F3054e6a1);
-        usdCoin = IERC20Upgradeable(0x57bdadeAcf684Fa3a01a89B76E7c9038e4f93296);
+        bbitesToken = IERC20Upgradeable(0x787325215eD1BB331695577DcE9f81e1a6460524);
+        usdCoin = IERC20Upgradeable(0xfeAFF4e7550428dC9bD539FA38c860eD6B70D372);
     }
 
     function _authorizeUpgrade(
@@ -47,10 +47,14 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
 
     function purchaseWithTokens(uint256 _id) public {
         //Verifica que el id deseado este dentro del rango correcto
-        require(_id >= 0 && _id <= 699);
+        require(_id >= 0 && _id <= 699, "NFT ID fuera de rango");
         //Verifica que el NFT deseado no haya sido minteado
         require(!comprado[_id], "Este NFT ya fue minteado");
         //Transferir los tokens del comprador a Public Sale segun el precio indicado por la funcion getPriceForId
+        //Calcula si hay suficiente allowance
+        address nftBuyer = msg.sender;
+        uint256 allowance = bbitesToken.allowance(nftBuyer, msg.sender);
+        require(allowance >= getPriceForId(_id), "No hay suficiente BBitesTokens aprobado");
         bbitesToken.transferFrom(msg.sender, address(this), getPriceForId(_id));
         comprado[_id] = true;
         emit PurchaseNftWithId(msg.sender, _id);
@@ -58,11 +62,14 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
 
     function purchaseWithUSDC(uint256 _id, uint256 _amountIn) external {
         //Verifica que el id deseado este dentro del rango correcto
-        require(_id >= 0 && _id <= 699);
+        require(_id >= 0 && _id <= 699, "NFT ID fuera de rango");
         //Verifica que el NFT deseado no haya sido minteado
         require(!comprado[_id], "Este NFT ya fue minteado");
         //Guarda el address del comprador para darle su vuelto en caso de que lo haya
         address nftBuyer = msg.sender;
+        //Calcula si hay suficiente allowance
+        uint256 allowance = usdCoin.allowance(nftBuyer, msg.sender);
+        require(allowance >= _amountIn, "No hay suficiente USDC aprobado");
         // transfiere _amountIn de USDC a este contrato
         usdCoin.transferFrom(msg.sender, address(this), _amountIn);
         // llama a swapTokensForExactTokens: valor de retorno de este metodo es cuanto gastaste del token input
@@ -99,7 +106,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         require(msg.value == 0.01 ether, "No envio la cantidad exacta de Ether");
         uint256 id = random700To999();
         //Verifica que el NFT deseado no haya sido minteado
-        require(!comprado[id], "Este NFT ya fue minteado");
+        require(!comprado[id], "Este NFT ya fue minteado, trata de nuevo");
         comprado[id] = true;
         emit PurchaseNftWithId(msg.sender, id);
 

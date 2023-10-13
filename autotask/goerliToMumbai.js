@@ -24,9 +24,9 @@ exports.handler = async function (data) {
   var { account, id } = event[0].params;
 
   // Ejecutar 'mint' en Mumbai del contrato CuyCollection
-  var publicSaleAdd = "0x1aa8AD573b654E5C19Cb4570e99BD200D98683e5";
+  var cuyCollectionAdd = "0x279E9d268Ed127DF538Ff70CC1ddA4945371Ec79";
   var tokenAbi = ["function safeMint(address to, uint256 tokenId)"];
-  var tokenContract = new ethers.Contract(publicSaleAdd, tokenAbi, signer);
+  var tokenContract = new ethers.Contract(cuyCollectionAdd, tokenAbi, signer);
   var tx = await tokenContract.safeMint(account, id);
   var res = await tx.wait();
   return res;
