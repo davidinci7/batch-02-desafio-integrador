@@ -46,7 +46,8 @@ async function deploySC(contractName, args = []) {
   var proxyContract = await dp(smartContract, [...args], {
     kind: "uups",
   });
-  if (process.env.HARDHAT_NETWORK) {
+  console.log(process.env.HARDHAT_NETWORK);
+  if (process.env.HARDHAT_NETWORK && process.env.HARDHAT_NETWORK!="localhost") {
     // true cuando se usa '--network matic' en el script de deployment
     var tx = await proxyContract.waitForDeployment();
     await tx.deploymentTransaction().wait(5);
@@ -58,7 +59,7 @@ async function deploySCNoUp(contractName, args = []) {
   var smartContract = await dc(contractName, [...args]);
 
   // true cuando se usa '--network matic' en el script de deployment
-  if (process.env.HARDHAT_NETWORK) {
+  if (process.env.HARDHAT_NETWORK && process.env.HARDHAT_NETWORK!="localhost") {
     var res = await smartContract.waitForDeployment();
     await res.deploymentTransaction().wait(5);
 

@@ -1,7 +1,7 @@
 const { MerkleTree } = require("merkletreejs");
 const keccak256 = require("keccak256");
 const { ethers } = require("hardhat");
-const walletAndIds = require("../wallets/walletList");
+const {whitelistWallets} = require("../wallets/walletList");
 
 function hashToken(id, address) {
   return Buffer.from(
@@ -14,7 +14,7 @@ function hashToken(id, address) {
 
 var merkleTree, root;
 function construyendoMerkleTree() {
-  var elementosHasheados = walletAndIds.map(({ id, address }) => {
+  var elementosHasheados = whitelistWallets.map(({ id, address }) => {
     return hashToken(id, address);
   });
   merkleTree = new MerkleTree(elementosHasheados, keccak256, {
@@ -28,8 +28,8 @@ function construyendoMerkleTree() {
 
 var hasheandoElemento, pruebas;
 function construyendoPruebas() {
-  var id = 1796;
-  var address = "0x2F35cD52e3429A6D65cFDbF4EAf7195D11623C8e";
+  var id = 1001;
+  var address = "0xBA3bf4CA212F841970ca38EA28117aDb6F881Aa9";
   hasheandoElemento = hashToken(id, address);
   pruebas = merkleTree.getHexProof(hasheandoElemento);
   console.log(pruebas);
@@ -56,8 +56,8 @@ async function main() {
   console.log(`A mano: ${perteneceAMano}`);
 
   // Una persona en el futuro quiere hacer mint
-  var id = 1796;
-  var address = "0x2F35cD52e3429A6D65cFDbF4EAf7195D11623C8e";
+  var id = 1000;
+  var address = "0xC840F562D9F69b46b4227003E01525CB99344B72";
   await merkleTreeContract.safeMint(address, id, pruebas);
 }
 

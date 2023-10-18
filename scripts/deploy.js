@@ -58,7 +58,7 @@ function roles(){
 }
 
 //deployMumbai()
-  //deployGoerli()
+//deployGoerli()
 deployPublicSale()
   //roles()
   .catch((error) => {

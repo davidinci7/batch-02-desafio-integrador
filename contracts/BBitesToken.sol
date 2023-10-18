@@ -10,19 +10,19 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 
 /// @custom:security-contact lee.marreros@blockchainbites.co
-contract BBitesToken is Initializable, ERC20Upgradeable, PausableUpgradeable, AccessControlUpgradeable, OwnableUpgradeable, UUPSUpgradeable, ERC20PermitUpgradeable{
+contract BBitesToken is Initializable, ERC20Upgradeable, PausableUpgradeable, AccessControlUpgradeable, OwnableUpgradeable, UUPSUpgradeable{
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
    
     function initialize() public initializer {
         __ERC20_init("BBites Token", "BBTKN");
+        __ERC20_init_unchained("BBites Token", "BBTKN");
          __Pausable_init();
         __AccessControl_init();
         __Ownable_init();
         __UUPSUpgradeable_init();
         _mint(msg.sender, 1000000 * 10 ** decimals());
-        __ERC20Permit_init("BBites Token");
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);

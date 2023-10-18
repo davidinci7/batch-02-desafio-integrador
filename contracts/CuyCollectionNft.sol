@@ -61,7 +61,7 @@ function _authorizeUpgrade(
         bytes32[] calldata proofs
     ) public whenNotPaused{
         //Internamente este método valida que to y tokenId sean parte de la lista.
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(to, tokenId))));
+        bytes32 leaf = keccak256(abi.encodePacked(tokenId,to));
         require(tokenId >= 1000 && 1999 >= tokenId, "Estas tratando de mintear un NFT que no es parte de la lista blanca");
         require(MerkleProof.verify(proofs, root, leaf), "No eres parte de la lista blanca");
         _safeMint(to, tokenId);
