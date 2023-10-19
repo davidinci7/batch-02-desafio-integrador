@@ -46,7 +46,6 @@ async function deploySC(contractName, args = []) {
   var proxyContract = await dp(smartContract, [...args], {
     kind: "uups",
   });
-  console.log(process.env.HARDHAT_NETWORK);
   if (process.env.HARDHAT_NETWORK && process.env.HARDHAT_NETWORK!="localhost") {
     // true cuando se usa '--network matic' en el script de deployment
     var tx = await proxyContract.waitForDeployment();

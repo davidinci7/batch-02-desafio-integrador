@@ -17,17 +17,29 @@ describe("Testing", function () {
       const bbitesTok = await deploySC("BBitesToken");
       const usdCoin = await deploySCNoUp("USDCoin");
       const publicSale = await deploySC("PublicSale",[await bbitesTok.getAddress(),await usdCoin.getAddress()]);
-  
-      return { publicSale, bbitesTok, usdCoin, owner, addr1, addr2 };
+      const cuyCollection = await deploySC("CuyCollectionNft");
+      const relMumbai = "0x33E0daF71aC39e5D1f176b6e2079C9fdAe4b7afE";
+      const relayerSignerMumbai = await ethers.getImpersonatedSigner(relMumbai);
+      await cuyCollection.grantRole(MINTER_ROLE,relMumbai);
+      
+      var ONE_ETHER = `0x${ethers.parseEther("1").toString(16)}`;
+      await network.provider.send("hardhat_setBalance", [
+        relMumbai,
+        ONE_ETHER,
+      ]);
+      return { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, usdCoin, owner, addr1, addr2 };
     }
 
-    it("Deberia de crear una colleccion con el nombre Cuy Collection", async function () {
-        const { publicSale, bbitesTok, usdCoin, owner, addr1, addr2} = await loadFixture(deployTokenFixture);
+    it("Compra con BBitesToken y acuña NFT", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, usdCoin, owner} = await loadFixture(deployTokenFixture);
         const precioId10 = await publicSale.getPriceForId(10);
         await bbitesTok.approve(await publicSale.getAddress(), precioId10);
         var tx = await publicSale.purchaseWithTokens(10);
         await expect(tx).to.emit(publicSale,"PurchaseNftWithId").withArgs(owner.address,10);
-        //expect(await publicSale.ownerOf(10)).to.equal(owner.address);
+        
+
+        await cuyCollection.connect(relayerSignerMumbai).safeMint(await owner.getAddress(), 10);
+        expect(await cuyCollection.ownerOf(10)).to.equal(owner.address);
       });
 
 }

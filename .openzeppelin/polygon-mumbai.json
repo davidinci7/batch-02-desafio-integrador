@@ -35,6 +35,26 @@
       "address": "0x64C9f09405CA3C6779AEd982996989375F90dde3",
       "txHash": "0x4c6200c4b8fa591b4513bea72a571e8336a5ddabe3e30ecd08f4eec40b5b5e5e",
       "kind": "uups"
+    },
+    {
+      "address": "0x9a31FD22464BA0537F10EDE0F7fc39873a2ad642",
+      "txHash": "0x371d7d05c5f0d463ac9308aec4e111155837424fbaf3252bc18d0b0f1211f62c",
+      "kind": "uups"
+    },
+    {
+      "address": "0x787325215eD1BB331695577DcE9f81e1a6460524",
+      "txHash": "0x8e9b27ac118af83061c7270cbaa1352323c8b0317e3869fbf01e1ee280b20e22",
+      "kind": "uups"
+    },
+    {
+      "address": "0xfeAFF4e7550428dC9bD539FA38c860eD6B70D372",
+      "txHash": "0xd87d96d90b179781b632398639f3a16116a190536f38b242866286c87f65396f",
+      "kind": "uups"
+    },
+    {
+      "address": "0xEE6694c14dD07579fD1aC5cCFFc0d4b7CCE11fa9",
+      "txHash": "0x966025f2b38034683eea78cd0ca1ad701feec6f261b7d86aae3dee403d1bf0c7",
+      "kind": "uups"
     }
   ],
   "impls": {

@@ -154,8 +154,8 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
             if(block.timestamp - startDate >= (40 * 86400)){
                 return 90000 * 10 ** 18;
             } else{
-                uint256 daysPassed = (block.timestamp - startDate) % 86400;
-                return (10000 + daysPassed * 2000) * 10 ** 18;
+                uint256 daysPassed = (block.timestamp - startDate) / 86400;
+                return (10000 + (daysPassed * 2000)) * 10 ** 18;
             }
         }
     }
