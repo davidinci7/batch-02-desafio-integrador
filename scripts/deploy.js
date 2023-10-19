@@ -58,7 +58,7 @@ async function deployPublicSale(){
   var impPS = await printAddress("PublicSale", publicSaleProxyAdd);
  
 //Darle el approve 
-/*  var [owner] = await ethers.getSigners();
+ var [owner] = await ethers.getSigners();
 
   var USDC = await ethers.getContractFactory("USDCoin");
   var usdc = USDC.attach(usdCoinAdd);
@@ -70,7 +70,8 @@ async function deployPublicSale(){
   var bbites = BBITES.attach(bbitesTokAdd);
   var txApproveBbites = await bbites.approve(await publicSale.getAddress(),50000000000000000000000n);
   await txApproveBbites.wait();
-  console.log(`Este es el approve de BBites: ${txApproveBbites.hash}`); */
+  console.log(`Este es el approve de BBites: ${txApproveBbites.hash}`);
+
 
   await verify(impPS, "PublicSale", []);
 }
