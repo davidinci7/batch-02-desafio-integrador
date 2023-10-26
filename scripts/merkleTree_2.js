@@ -1,7 +1,7 @@
 const { MerkleTree } = require("merkletreejs");
 const keccak256 = require("keccak256");
 const { ethers } = require("hardhat");
-const {whitelistWallets} = require("../wallets/walletList");
+const {walletAndIds} = require("../wallets/walletList");
 
 function hashToken(id, address) {
   return Buffer.from(
@@ -14,7 +14,7 @@ function hashToken(id, address) {
 
 var merkleTree, root;
 function construyendoMerkleTree() {
-  var elementosHasheados = whitelistWallets.map(({ id, address }) => {
+  var elementosHasheados = walletAndIds.map(({ id, address }) => {
     return hashToken(id, address);
   });
   merkleTree = new MerkleTree(elementosHasheados, keccak256, {

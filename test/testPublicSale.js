@@ -27,11 +27,15 @@ describe("Testing", function () {
         relMumbai,
         ONE_ETHER,
       ]);
-      return { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, usdCoin, owner, addr1, addr2 };
+      await network.provider.send("hardhat_setBalance", [
+        owner.address,
+        ONE_ETHER,
+      ]);
+      return { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, usdCoin, owner, addr1, addr2, ONE_ETHER };
     }
 
-    it("Compra con BBitesToken y acuña NFT", async function () {
-        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, usdCoin, owner} = await loadFixture(deployTokenFixture);
+    it("Compra con BBitesToken y acuña NFT (purchaseWithTokens)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, owner} = await loadFixture(deployTokenFixture);
         const precioId10 = await publicSale.getPriceForId(10);
         await bbitesTok.approve(await publicSale.getAddress(), precioId10);
         var tx = await publicSale.purchaseWithTokens(10);
@@ -42,15 +46,53 @@ describe("Testing", function () {
         expect(await cuyCollection.ownerOf(10)).to.equal(owner.address);
       });
 
-}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    );
+      //Este test debe ser ejecutado en un fork de Goerli, ya que hace uso del router de Uniswap V2
+  /*  it("Compra con USDC y acuña NFT (purchaseWithUSDC)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, usdCoin, owner} = await loadFixture(deployTokenFixture);
+        await usdCoin.approve(await publicSale.getAddress(), 50000000000);
+        var tx = await publicSale.purchaseWithUSDC(10,10000000000);
+        await expect(tx).to.emit(publicSale,"PurchaseNftWithId").withArgs(owner.address,10);
+        
+        await cuyCollection.connect(relayerSignerMumbai).safeMint(await owner.getAddress(), 10);
+        expect(await cuyCollection.ownerOf(10)).to.equal(owner.address);
+      }); */
+
+    it("Compra con Ether y acuña NFT (purchaseWithEtherAndId)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, owner} = await loadFixture(deployTokenFixture);
+        var tx = await publicSale.purchaseWithEtherAndId(700,{value:ethers.parseEther("0.01")});
+        await expect(tx).to.emit(publicSale,"PurchaseNftWithId").withArgs(owner.address,700);
+        
+
+        await cuyCollection.connect(relayerSignerMumbai).safeMint(await owner.getAddress(), 700);
+        expect(await cuyCollection.ownerOf(700)).to.equal(owner.address);
+      });
+
+    it("Retira el Ether depositado (withdrawEther)", async function () {
+        const { publicSale, ONE_ETHER} = await loadFixture(deployTokenFixture);
+        await network.provider.send("hardhat_setBalance", [
+          await publicSale.getAddress(),
+          ONE_ETHER,
+        ]);
+        await publicSale.withdrawEther();
+        await expect(await ethers.provider.getBalance(await publicSale.getAddress())).to.equal(0);
+      });
+
+    it("Retira los BBites Tokens depositados (withdrawTokens)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, owner} = await loadFixture(deployTokenFixture);
+        await bbitesTok.mint(await publicSale.getAddress(),50000000000000000000000n);
+        var tx = await publicSale.withdrawTokens();
+        await expect(await bbitesTok.balanceOf(await publicSale.getAddress())).to.equal(0);
+      });
+
+    it("Retorna el precio de 1000 para el NFT con ID 10 (getPriceForId)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, owner} = await loadFixture(deployTokenFixture);
+        const precioId10 = await publicSale.getPriceForId(10);
+        await expect(precioId10).to.equal(1000000000000000000000n);
+      });
+
+    it("Retorna el precio de 5000 para el NFT con ID 250 (getPriceForId)", async function () {
+        const { publicSale, cuyCollection, relayerSignerMumbai, bbitesTok, owner} = await loadFixture(deployTokenFixture);
+        const precioId10 = await publicSale.getPriceForId(250);
+        await expect(precioId10).to.equal(5000000000000000000000n);
+      });
+});

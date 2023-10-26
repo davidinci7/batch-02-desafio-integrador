@@ -22,7 +22,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
     uint256 constant startDate = 1696032000;
 
     // Maximo price NFT
-    uint256 constant MAX_PRICE_NFT = 90_000 * 10 ** 18;
+    uint256 constant MAX_PRICE_NFT = 90000 * 10 ** 18;
 
     mapping (uint256 => bool) comprado;
 
@@ -50,11 +50,6 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         require(_id >= 0 && _id <= 699, "NFT ID fuera de rango");
         //Verifica que el NFT deseado no haya sido minteado
         require(!comprado[_id], "Este NFT ya fue minteado");
-        //Transferir los tokens del comprador a Public Sale segun el precio indicado por la funcion getPriceForId
-        //Calcula si hay suficiente allowance
-        //address nftBuyer = msg.sender;
-        //uint256 allowance = bbitesToken.allowance(nftBuyer, msg.sender);
-        //require(allowance >= getPriceForId(_id), "No hay suficiente BBitesTokens aprobado");
         bbitesToken.transferFrom(msg.sender, address(this), getPriceForId(_id));
         comprado[_id] = true;
         emit PurchaseNftWithId(msg.sender, _id);
@@ -67,21 +62,15 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         require(!comprado[_id], "Este NFT ya fue minteado");
         //Guarda el address del comprador para darle su vuelto en caso de que lo haya
         address nftBuyer = msg.sender;
-        //Calcula si hay suficiente allowance
-        //uint256 allowance = usdCoin.allowance(nftBuyer, msg.sender);
-        //require(allowance >= _amountIn, "No hay suficiente USDC aprobado");
-        // transfiere _amountIn de USDC a este contrato
         usdCoin.transferFrom(msg.sender, address(this), _amountIn);
-        // llama a swapTokensForExactTokens: valor de retorno de este metodo es cuanto gastaste del token input
         uint256 nftPrice = getPriceForId(_id);
-        //Definiendo el path
+
         address[] memory path = new address[](2);
         path[0] = address(usdCoin);
         path[1] = address(bbitesToken);
-        // Dandole approve al router para usar los USDC
         usdCoin.approve(address(router), _amountIn);
         uint[] memory amounts = router.swapTokensForExactTokens(nftPrice,_amountIn,path,address(this),block.timestamp+300);
-        // transfiere el excedente de USDC al comprador, en este caso msg.sender es Public Sale
+
         if (amounts[0] < _amountIn) {
             usdCoin.transfer(nftBuyer,_amountIn - amounts[0]);
         }
@@ -92,7 +81,6 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
     function purchaseWithEtherAndId(uint256 _id) public payable {
         require(_id >= 700 && _id <= 999);
         require(msg.value >= 0.01 ether);
-        //Verifica que el NFT deseado no haya sido minteado
         require(!comprado[_id], "Este NFT ya fue minteado");
         uint256 rest = msg.value - 0.01 ether;
         if(rest > 0){
@@ -104,7 +92,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
 
     function depositEthForARandomNft() public payable {
         require(msg.value == 0.01 ether, "No envio la cantidad exacta de Ether");
-        //Verifica que el random NFT  no haya sido minteado
+        //Verifica que el random NFT no haya sido minteado
         bool alreadyMinted = true;
         uint256 id;
         while (alreadyMinted){
@@ -125,7 +113,6 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
     }
 
     function withdrawTokens() public onlyRole(DEFAULT_ADMIN_ROLE){
-        //Captura el address del admin que llama al metodo withdraw
         address adminCaller = msg.sender;
         uint256 balanceBBitesContract = bbitesToken.balanceOf(address(this));
         bbitesToken.transfer(adminCaller, balanceBBitesContract); 
@@ -152,7 +139,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
             return (_id * 20) * 10 ** 18;
         } else{
             if(block.timestamp - startDate >= (40 * 86400)){
-                return 90000 * 10 ** 18;
+                return MAX_PRICE_NFT;
             } else{
                 uint256 daysPassed = (block.timestamp - startDate) / 86400;
                 return (10000 + (daysPassed * 2000)) * 10 ** 18;

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract USDCoin is ERC20, AccessControl {
-    //Contract address in Goerli: 0xE8D1485aed890e8273C57f09D2730abC0a34b51A
+    
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     constructor() ERC20("USD Coin", "USDC") {
