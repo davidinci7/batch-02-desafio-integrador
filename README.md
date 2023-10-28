@@ -206,7 +206,7 @@ Crear un front-end minimalista para poder interactuar con el contrato de `Public
 4. Stable Coin `USDC` ficticio
 5. Autotask: `Goerli` a `Mumbai`. Incluye código en `goerliToMumbai.js`.
 6. Autotask: `Mumbai` a `Goerli`. Incluye código en `mumbaiToGoerli.js`.
-7. Pool de liquidez en Uniswap V2
+7. Pool de liquidez en Uniswap V2:  0xA3Fb240D75A0795ce6F67711e4f1a2adec7E77FC
 8. Front-end con los métodos implementados del punto `8 - Front-end`
 9. Testing con alta cobertura para `Public Sale`
 10. Testing con alta cobertura para `ERC721`
@@ -215,9 +215,9 @@ Crear un front-end minimalista para poder interactuar con el contrato de `Public
 
 # Completar
 
-1. Pega aquí la tx de una compra de un NFT `común` en `Public Sale` usando `UDSC`:
-2. Pega aquí la tx de una compra de un NFT `raro` en `Public Sale` usando `BBTKN`:
-3. Pega aquí la tx de una compra de un NFT `legendario` en `Public Sale` usando `UDSC`:
+1. Pega aquí la tx de una compra de un NFT `común` en `Public Sale` usando `UDSC`: 0x35e67ddb6d849407200acfff286326200e5f5b0c824a18d8b6fd7265bb85e60e
+2. Pega aquí la tx de una compra de un NFT `raro` en `Public Sale` usando `BBTKN`: 0xcee025cdec9ff9e363d5da1b4ca0e8efaa976b440addc2709815f2f9f9750242
+3. Pega aquí la tx de una compra de un NFT `legendario` en `Public Sale` usando `UDSC`: 0xdf6174eeb6bdba9393e6fd56eee306c1d683b1b91083847f463c05cd5043349a
 4. Pega aquí la tx de una compra de un NFT `mistico` en `Public Sale` usando `ether` y un `id` en específico:
 5. Pega aquí la tx de una compra de un NFT `mistico` en `Public Sale` usando `ether` (random id):
 6. Pega aquí la tx de una acuñación whitelist de un NFT en el contrato `NFT`:
